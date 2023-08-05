@@ -10,7 +10,6 @@ import Swal from 'sweetalert2';
 
 /*
 
-Mensagem de alerta
 Topicos para pesquisar e filtrar repositórios (linguagem, simple, advanced)
 Remover repositorio da lista
 
@@ -28,7 +27,7 @@ function App() {
 
       if(data.id){
         const isExist = repos.find(repo => repo.id === data.id);
-        if(isExist){ throw new Error("O repositório já se encontra listado"); }
+        if(isExist){ throw (new Error()); }
 
         setRepos(prev => [...prev, data]);
         setCurrentRepo('');
@@ -36,7 +35,6 @@ function App() {
       }
     }catch(e){
       e.name === "AxiosError" ? new Swal("Repositório não encontrado") : new Swal("O repositório já se encontra listado");
-      
     }
     
   }
