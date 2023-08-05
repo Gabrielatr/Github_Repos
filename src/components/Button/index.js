@@ -1,9 +1,9 @@
 import React from 'react'
 import { ButtonContainer } from './styles'
 
-function Button({event}) {
+function Button({onClick}) {
   return (
-    <ButtonContainer onClick={event}>
+    <ButtonContainer onClick={onClick}>
       Search
     </ButtonContainer>
   )
