@@ -5,6 +5,7 @@ import ItemRepo from '../components/ItemRepo/index.js';
 import Button from '../components/Button/index.js';
 import { useState } from 'react';
 import { api } from '../services/api.js';
+import Swal from 'sweetalert2';
 
 
 /*
@@ -22,22 +23,21 @@ function App() {
   const [repos, setRepos] = useState([]);
 
   const handleSearchRepo = async () => {
-    console.log("Olá");
-    const {data} = await api.get(`repos/${currentRepo}`);
-    
+    try{
+      const {data} = await api.get(`repos/${currentRepo}`);
 
-    if(data.id){
-      const isExist = repos.find(repo => repo.id === data.id);
-      console.log(data);
+      if(data.id){
+        const isExist = repos.find(repo => repo.id === data.id);
+        if(isExist){ throw new Error("O repositório já se encontra listado"); }
 
-      if(!isExist){
         setRepos(prev => [...prev, data]);
         setCurrentRepo('');
         return
       }
+    }catch(e){
+      e.name === "AxiosError" ? new Swal("Repositório não encontrado") : new Swal("O repositório já se encontra listado");
+      
     }
-    console.log("Repositório não encontrado");
-    alert("Repositório não encontrado");
     
   }
 
