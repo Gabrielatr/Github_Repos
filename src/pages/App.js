@@ -11,7 +11,6 @@ import Swal from 'sweetalert2';
 /*
 
 Topicos para pesquisar e filtrar repositórios (linguagem, simple, advanced)
-Remover repositorio da lista
 
 */
 
@@ -40,7 +39,8 @@ function App() {
   }
 
   const handleRemoveRepo = (id) => {
-    console.log("Removendo registro:", id)
+    const newRepos = repos.filter(repo => repo.id !== id);
+    setRepos(newRepos)
   }
 
   return (
@@ -49,7 +49,7 @@ function App() {
       <img src={gitlogo} width={72} height={72} alt='github logo'/>
       <Input value={currentRepo} onChange={(e) => setCurrentRepo(e.target.value)} />
       <Button onClick={handleSearchRepo}/>
-      {repos.map(repo => <ItemRepo repo={repo} />)}
+      {repos.map(repo => <ItemRepo key={repo.id} repo={repo} onClick={() => handleRemoveRepo(repo.id)} />)}
     </Container>
     
   );
