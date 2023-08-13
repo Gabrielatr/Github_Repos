@@ -7,7 +7,8 @@ export const ButtonContainer = styled.button`
     cursor: pointer;
     
     height: 35px;
-    width: 10%;
+    min-width: 100px;
+    padding: 5px 10px;
 
     &: hover{
         background-color: purple;

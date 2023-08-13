@@ -1,10 +1,10 @@
 import React from 'react'
 import { ButtonContainer } from './styles'
 
-function Button({onClick}) {
+function Button({onClick, value}) {
   return (
     <ButtonContainer onClick={onClick}>
-      Search
+      {value}
     </ButtonContainer>
   )
 }
