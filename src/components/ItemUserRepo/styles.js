@@ -21,7 +21,7 @@ export const ItemContainer = styled.div`
         font-size: 16px;
     }
 
-    .remove {
+    .add {
         color: #c22d23;
         font-size: 16px;
         padding-top: 7px;

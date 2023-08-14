@@ -22,3 +22,19 @@ export const InputContainer = styled.div`
         padding: 0 20px;
     }
 `
+
+export const IContainer = styled.input`
+    background: transparent;
+    color: white;
+    font-size: 20px;
+
+    border-radius: 20px;
+
+    height: 50px;
+    margin: 10px;
+    padding: 0 20px;
+    width: 30%;
+    min-width: 250px;
+    align-items: center;
+    justify-content: center;
+`

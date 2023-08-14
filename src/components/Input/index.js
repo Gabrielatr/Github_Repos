@@ -1,11 +1,9 @@
 import React from 'react'
-import { InputContainer } from './styles'
+import { IContainer } from './styles'
 
 function Input({value, onChange}) {
   return (
-    <InputContainer>
-        <input value={value} onChange={onChange}/>
-    </InputContainer>
+    <IContainer value={value} onChange={onChange} />
   )
 }
 
