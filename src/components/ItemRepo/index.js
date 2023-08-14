@@ -6,7 +6,7 @@ function ItemRepo({repo, onClick}) {
 
   return (
     <ItemContainer>
-        <h3>{repo.name}</h3>
+        <h4>{repo.name}</h4>
         <p className='User'>{repo.full_name}</p> <br />
         <a href={repo.html_url} target='_blank' rel="noreferrer" className='repo'>Link</a> <br />
         <span className='remove' onClick={onClick}>Remove</span>

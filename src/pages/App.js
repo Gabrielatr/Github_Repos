@@ -8,20 +8,13 @@ import { useState } from 'react';
 import { api } from '../services/api.js';
 import Swal from 'sweetalert2';
 
-
-/*
-
-Topicos para pesquisar e filtrar repositórios (linguagem, simple, advanced)
-
-*/
-
-
 function App() {
 
   const [currentSearch, setCurrentSearch] = useState('');
   const [repos, setRepos] = useState([]);
   const [userRepos, setUserRepos] = useState([]);
   const [list, setList] = useState([]);
+  const [fullScreen, setFullScreen] = useState(true);
 
 
   const handleSearchRepo = async () => {
@@ -37,12 +30,13 @@ function App() {
         return
       }
     }catch(e){
-      e.name === "AxiosError" ? new Swal("Repositório não encontrado") : new Swal("O repositório já se encontra listado");
+      e.name === "AxiosError" ? new Swal("Repository not found.") : new Swal("The repository already exists!");
     }
     
   }
 
   const handleSearchReposFromUser = async () => {
+    setFullScreen(false);
     try{
       const {data} = await api.get(`/users/${currentSearch}/repos`);
 
@@ -68,29 +62,35 @@ function App() {
   }
 
   const handleOrder = (event) => {
-    if(event.target.value !== ""){
-      if(event.target.value === "Descending"){
-        console.log("desc");
-        setList(list.sort(function(a,b){
-          return new Date(b.created_at) - new Date(a.created_at);
-        }));
-      }else{
-        setList(list.sort(function(a,b){
-          return new Date(a.created_at) - new Date(b.created_at);
-        }));
+    const value = event.target.value;
+    let newList;
+
+    if (value !== "") {
+      if (value === "Descending") {
+        newList = list.slice().sort((a, b) => b.id - a.id);
+      } else {
+        newList = list.slice().sort((a, b) => a.id - b.id);
       }
-    }else{
-      setList(userRepos);
+      setList(newList);
     }
-  }
+  };
 
   const handleAddRepo = (repo) => {
-    setRepos(prev => [...prev, repo]);
+    if(repo.id){
+      const isExist = repos.find(rep => rep.id === repo.id);
+      if(isExist){ new Swal("The repository already exists!"); return }
+
+      setRepos(prev => [...prev, repo]);
+    }
   }
 
   const handleRemoveRepo = (id) => {
     const newRepos = repos.filter(repo => repo.id !== id);
     setRepos(newRepos)
+  }
+
+  const handleTooltip = (event) => {
+    event.tooltip();
   }
   
 
@@ -98,19 +98,34 @@ function App() {
     
     <Container>
 
-      <SearchContainer className='search'>
+      <SearchContainer className='search' style={{'width': `${fullScreen ? "100%" : "50%"}`}}>
         <img src={gitlogo} width={72} height={72} alt='github logo'/><br />
         <Input value={currentSearch} onChange={(e) => setCurrentSearch(e.target.value)} />
 
         <BtnContainer>
-          <Button onClick={handleSearchRepo} value="Search" />
-          <Button value="Search your repos" onClick={handleSearchReposFromUser}/>
+          <Button 
+            onClick={handleSearchRepo}
+            value="Add repo"
+            onTouchStart={handleTooltip}
+            title="Write [username]/[repo's name] in the input / Insira [username]/[nome do repo] no input" />
+          <Button
+            value="Search with username"
+            onClick={handleSearchReposFromUser}
+            onTouchStart={handleTooltip}
+            title="Give your username in the input / Insira seu username no input"/>
         </BtnContainer>
-        
-        {repos.map(repo => <ItemRepo key={repo.id} repo={repo} onClick={() => handleRemoveRepo(repo.id)} />)}
+        <fieldset style={{
+          width: "70%",
+          height: "60%",
+          padding: "20px",
+          overflow: "scroll"
+        }}>
+          <legend>List of saved repositories</legend>
+          {repos.map(repo => <ItemRepo key={repo.id} repo={repo} onClick={() => handleRemoveRepo(repo.id)} />)}
+        </fieldset>
       </SearchContainer>
 
-      <ListContainer className='searchList'>
+      <ListContainer className='searchList' style={{'display': `${fullScreen ? 'none' : 'inline' }`, 'width': `${fullScreen ? '0' : '50%' }`}}>
         <ul>
           <li>
             <label>Language: </label>
@@ -132,10 +147,17 @@ function App() {
               <option>Ascending</option>
             </select>
           </li>
+          <li>
+            <label>Total: {list.length} </label>
+          </li>
         </ul>
         <br />
-        {list.map(repo => <ItemUserRepo key={repo.id} repo={repo} onClick={() => handleAddRepo(repo)} />)}
-        
+        <hr />
+        <br />
+        <div id='ListRepos'>
+          {list.map(repo => <ItemUserRepo key={repo.id} repo={repo} onClick={() => handleAddRepo(repo)} />)}
+        </div>
+
       </ListContainer>
     </Container>
     
